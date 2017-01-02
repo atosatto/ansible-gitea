@@ -1,0 +1,73 @@
+---
+
+- name: include os-specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+
+  # add the python sni support to legacy python installations
+- include: python_sni.yml
+  when: ansible_os_family == 'Debian'
+    and ansible_python_version | version_compare('2.6.0', '>=')
+    and ansible_python_version | version_compare('2.7.9', '<')
+
+  # install additional ansible dependencies
+- name: install ansible support packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ ansible_support_packages }}"
+
+- name: create gitea group
+  group:
+    name: "{{ gitea_group }}"
+    state: present
+
+- name: create gitea user
+  user:
+    name: "{{ gitea_user }}"
+    group: "{{ gitea_group }}"
+    home: "{{ gitea_working_dir }}"
+    comment: Gitea
+
+- name: make sure the directory containing gitea binary exist
+  file:
+    path: "{{ gitea_bin | dirname }}"
+    state: directory
+    owner: "{{ gitea_user }}"
+    group: "{{ gitea_group }}"
+    mode: 0755
+    recurse: yes
+
+- name: download gitea binary
+  get_url:
+    url: "{{ gitea_download_url }}"
+    dest: "{{ gitea_bin }}"
+    owner: "{{ gitea_user }}"
+    group: "{{ gitea_group }}"
+    mode: 0755
+
+- name: generate the gitea envfile
+  template:
+    src: gitea.env.j2
+    dest: "{{ gitea_envfile }}"
+  notify: restart gitea
+
+- name: create the gitea systemd unit file
+  template:
+    src: gitea.unit.j2
+    dest: "{{ systemd_units_dir }}/gitea.service"
+  when: ansible_service_mgr == "systemd"
+  notify: restart gitea
+
+- name: create the gitea init.d start-up script
+  template:
+    src: gitea.init.j2
+    dest: "{{ initd_conf_dir }}/gitea"
+    mode: 0755
+  when: ansible_service_mgr != "systemd"
+  notify: restart gitea
+
+- name: enable and start the gitea web service
+  service:
+    name: gitea
+    state: started
+    enabled: yes

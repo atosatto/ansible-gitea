@@ -1,0 +1,25 @@
+[Unit]
+Description=Gitea (Git with a cup of tea)
+After=syslog.target
+After=network.target
+
+[Service]
+
+Type=simple
+User={{ gitea_user }}
+Group={{ gitea_group }}
+WorkingDirectory={{ gitea_working_dir }}
+
+EnvironmentFile={{ gitea_envfile }}
+ExecStart={{ gitea_bin }} web
+Restart=always
+
+# Modify these two values and uncomment them if you have
+# repos with lots of files and get an HTTP error 500 because
+# of that
+###
+#LimitMEMLOCK=infinity
+#LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

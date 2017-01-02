@@ -1,0 +1,31 @@
+galaxy_info:
+  author: Andrea Tosatto
+  description: Install and configure the Gitea self-hosted git server on RHEL/CentOS and Debian/Ubuntu
+  min_ansible_version: 2.1
+  license: MIT
+  issue_tracker_url: https://github.com/atosatto/ansible-gitea/issues
+
+  platforms:
+    - name: EL
+      versions:
+        - 7
+    - name: Ubuntu
+      versions:
+        - trusty
+        - utopic
+        - vivid
+        - wily
+        - xenial
+    - name: Debian
+      versions:
+        - etch
+        - jessie
+
+  galaxy_tags:
+    - gitea
+    - system
+    - git
+    - git-server
+    - self-hosted
+
+dependencies: []
