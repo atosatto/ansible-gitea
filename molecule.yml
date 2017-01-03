@@ -15,8 +15,6 @@ docker:
       image: ubuntu
       image_version: 14.04
       privileged: True
-    # Unfortunately, upstart does not run in Docker containers,
-    # so no Ubuntu 14.04 docker tests :/
 
 # vagrant driver configuration (development)
 vagrant:
@@ -36,7 +34,6 @@ vagrant:
   instances:
     - name: ansible-gitea-01
       interfaces:
-        # network needed to connect
         - network_name: private_network
           type: dhcp
           auto_config: true

@@ -39,6 +39,7 @@ Parent directory of the Gitea log and repositories folders.
 Name and group of the user running Gitea.
 **NB**: This role automatically creates the gitea user and/or group if these does not exist in the system.
 
+Dependencies
 ------------
 
 None.
