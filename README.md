@@ -20,7 +20,7 @@ Available variables are listed below, along with default values (see `defaults/m
 
 The Gitea version that has to be installed.
 
-    gitea_bin: /usr/local/bin/minio
+    gitea_bin: /usr/local/bin/gitea
 
 Installation path of the Gitea binary.
 
